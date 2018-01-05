@@ -36,16 +36,16 @@ namespace DataLogger
 		const int IR_DATA_BIT_ZERO_US_LL =  IR_DATA_BIT_ZERO_US - IR_TOLERANCE_US;
 		const int IR_DATA_BIT_ZERO_US_UL =  IR_DATA_BIT_ZERO_US + IR_TOLERANCE_US;
 		const int IR_DATA_BIT_ONE_US_LL = 	IR_DATA_BIT_ONE_US - IR_TOLERANCE_US;
-		const int IR_DATA_BIT_ONE_US_UL =   IR_DATA_BIT_ONE_US + IR_TOLERANCE_US;		
+		const int IR_DATA_BIT_ONE_US_UL =   IR_DATA_BIT_ONE_US + IR_TOLERANCE_US;				
 		
-		/*const int IR_START_BIT_US_LL = 		IR_START_BIT_US - 200;
-		const int IR_START_BIT_US_UL = 		IR_START_BIT_US + 200;
-		const int IR_DATA_BIT_ZERO_US_LL =  IR_DATA_BIT_ZERO_US - 200;
-		const int IR_DATA_BIT_ZERO_US_UL =  IR_DATA_BIT_ZERO_US + 130;
-		const int IR_DATA_BIT_ONE_US_LL = 	IR_DATA_BIT_ONE_US - 250;
-		const int IR_DATA_BIT_ONE_US_UL =   IR_DATA_BIT_ONE_US + 150; */		
+		public enum IrCommandType
+		{
+			IrTvVolUp,
+			IrTvVolDown,
+			IrTvVolMute			
+		}
 		
-		public enum IrBitType
+		enum IrBitType
 		{
 			IR_INVALID = -1,
 			IR_DATA_BIT_ONE,

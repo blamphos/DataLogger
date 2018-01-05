@@ -14,7 +14,7 @@ namespace DataLogger
 	public partial class MainForm : Form
 	{			
 		int noCommandCounter = 0;
-		
+		IrDecoder irDecoder = new IrDecoder();
 
 			
 		private void ProcessData(string pDataStr)
@@ -121,7 +121,8 @@ namespace DataLogger
 						UpdateGraph();
 						//AnalyzeReceivedData(); // Drop detect
 						//if (!AnalyzeReceivedIrData_Backup())
-						if (!AnalyzeReceivedIrData())
+						//if (!AnalyzeReceivedIrData())
+						if (irDecoder.AnalyzeData(points))
 						{
 							noCommandCounter++;
 						}
@@ -262,7 +263,7 @@ namespace DataLogger
             return commandReceived;
 		}*/
 		
-		bool AnalyzeReceivedIrData_Backup()
+		/*bool AnalyzeReceivedIrData_Backup()
 		{
             //var dcLevel = points.Average() / 65535.0 * 3.3;
             var pulseHigh = false;
@@ -363,7 +364,7 @@ namespace DataLogger
             }
 	
             return commandReceived;
-		}
+		}*/
 		
 		void AnalyzeReceivedData()
 		{	
