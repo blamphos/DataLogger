@@ -56,7 +56,7 @@ namespace DataLogger
         bool pulseHigh = false;
         int databits = 0;
         int length = 0;
-        List<int> pulseLengths = new List<int>();
+        readonly List<int> pulseLengths = new List<int>();
         bool receiving = false;
         long data = 0;
         bool commandReceived = false;
@@ -103,6 +103,8 @@ namespace DataLogger
 			data = 0;
 			commandReceived = false;
 			bitType = IrBitType.IR_INVALID;
+			
+			Debug.WriteLine("IR detection reset");
 		}
 		
 		public bool AnalyzeData(List<double> points)
@@ -145,7 +147,10 @@ namespace DataLogger
                                 {
                                     //Log.Files.Debug($"Idle: {len}");
                                     //Log.Files.Debug($"Index: {i}");
-                                    receiving = false;
+                                    //receiving = false;
+                                    // Invalid bit received --> clear all and start over
+                                    Reset();
+                                    continue;
                                 }
 								
                                 if (receiving && databits == 32)
