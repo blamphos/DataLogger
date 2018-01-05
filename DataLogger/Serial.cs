@@ -84,8 +84,7 @@ namespace DataLogger
 					{
 						sb = new StringBuilder();
 					}
-	
-	
+		
 		        	for (int i = 0; i < bufLen; i++)
 		        	{
 		        		if (lineBuf[i].Length > 0)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using System.Collections; 
@@ -11,7 +12,11 @@ using ZedGraph;
 namespace DataLogger
 {
 	public partial class MainForm : Form
-	{	
+	{			
+		int noCommandCounter = 0;
+		
+
+			
 		private void ProcessData(string pDataStr)
 		{
 			int i = 0;
@@ -23,7 +28,7 @@ namespace DataLogger
 			//Debug.WriteLine(fileName);
 			
 			try 
-			{				
+			{	
 				//if (File.Exists(fileName) == false) return;
 				
 				//tempFileName = @"C:\Temp\" + Path.GetFileName(fileName);
@@ -41,7 +46,7 @@ namespace DataLogger
 			        	//list.Clear();		        
 			        	
 			        	string[] s_buf = line.Split(',');	
-			        	Debug.WriteLine("Received: " + s_buf.Length.ToString() + " samples.");
+			        	//Debug.WriteLine("Received: " + s_buf.Length.ToString() + " samples.");
 
 			        	// Remove points from start if list "is full"
 			        	list.Clear();
@@ -61,15 +66,71 @@ namespace DataLogger
 							{
 								x = i * sampleInterval * 1000.0;
 								//y = Double.Parse(s) / 65535.0 * 3.3;
-								y = Double.Parse(s) / 100.0;
+								y = Double.Parse(s) / 100.0 * 3.3;
 								list.Add(x, y);
 								i++;							
 							}
 							
 							//if (i > 1000) break;
 						}
-						UpdataGraph();
-						//AnalyzeReceivedData();
+						
+						// Build list2 with filtered values to plot a new curve in graph pane
+						list2.Clear();
+						
+						// Filter glitches
+						int highSamples = 0;
+						var indexes = new List<int>();
+						var points = list.Select(pointPair => pointPair.Y).ToList();
+						for (i = 0; i < points.Count; i++)
+						{
+							//list2.Add(list[i]);
+							
+							if (points[i] > 0.8)
+							{
+								highSamples++;								
+							}
+							else 
+							{	//										 __
+								// "Peak" pulse (glitch) detected ( ____|  |________ )
+								if (highSamples > 0 && highSamples <= 4)
+								{
+									// Zero samples according to high samples count ( ______________ )
+									var offset = i - highSamples;
+									for (var j = 0; j < highSamples; j++)
+									{
+										//list[offset + j].Y = 0.0;
+										//list2[offset + j].Y = 0.0;
+										//indexes.Add(offset + j);
+									}
+								}
+								highSamples = 0;
+							}
+						}										
+						
+						/*for (i = 0; i < points.Count; i++)
+						{
+							var item = list[i];
+							if (indexes.Contains(i))
+							{
+								item.Y = 0.0;
+								
+							}
+							list2.Add(item.X, item.Y + 0.5);
+						}*/
+						
+						UpdateGraph();
+						//AnalyzeReceivedData(); // Drop detect
+						//if (!AnalyzeReceivedIrData_Backup())
+						if (!AnalyzeReceivedIrData())
+						{
+							noCommandCounter++;
+						}
+						
+						if (noCommandCounter > 4)
+						{
+							lblCount.Text = "";
+							noCommandCounter = 0;
+						}
 			        }
 				}			
 			}	
@@ -83,6 +144,227 @@ namespace DataLogger
 			}
 		}		
 
+		/*bool AnalyzeReceivedIrData()
+		{
+            //var dcLevel = points.Average() / 65535.0 * 3.3;
+            var pulseHigh = false;
+            int databits = 0;
+            var length = 0;
+            var pulseLengths = new List<int>();
+            var receiving = false;
+            long data = 0;
+            bool commandReceived = false;
+            IrDecoder.IrBitType bitType;
+            
+            //points = Statistics.MovingAverage(points, 3).ToList();
+			var points = list.Select(pointPair => pointPair.Y).ToList();
+						
+            for (var i = 0; i < points.Count; i++)
+            {
+            	if (points[i] > 0.8)
+                {               	
+                    // Rising edge starts new pulse
+                    if (!pulseHigh)
+                    {
+                        // Handle current pulse
+                        if (length > 0)
+                        {
+                            //var len = length;
+                            //pulseLengths.Add(length * IR_SAMPLING_PERIOD_US);
+                            //Debug.WriteLine("Pulse: " + len);
+                            bitType = GetBitType(length);
+                            //Debug.WriteLine(" (" + bitType + ")");
+
+                            if (receiving)
+                            {
+                            	if (bitType == IrBitType.IR_DATA_BIT_ONE)
+                                {
+                                	try
+                                	{
+                                		data |= (long)1 << databits;
+                                		databits++;
+                                	}
+                                	catch (Exception e) {
+                                		Debug.WriteLine(e.Message);
+                                	}
+                                    
+                                }
+                            	else if (bitType == IrBitType.IR_DATA_BIT_ZERO)
+                                {
+                                    databits++;
+                                }
+                                else
+                                {
+                                    //Log.Files.Debug($"Idle: {len}");
+                                    //Log.Files.Debug($"Index: {i}");
+                                    receiving = false;
+                                }
+								
+                                if (receiving && databits == 32)
+                                {
+                                	foreach(var item in pulseLengths)
+                                	{
+                                		Debug.WriteLine(item);
+                                	}
+                                    receiving = false;
+                                    Debug.WriteLine("Data: 0x" + data.ToString("X2"));
+                                    if ((data & 0xFFFFFFFF) == IR_TV_VOL_UP)
+                                    {
+                                    	lblCount.Text = "UP"; 
+                                    	commandReceived = true;
+                                    	//SendKeys.SendWait("{UP}");
+                                    }
+                                    else if ((data & 0xFFFFFFFF) == IR_TV_VOL_DOWN)
+                                    {
+                                    	lblCount.Text = "DOWN";
+                                    	commandReceived = true;
+                                    	//SendKeys.SendWait("{DOWN}");
+                                    }
+                                    else if ((data & 0xFFFFFFFF) == IR_TV_VOL_MUTE)
+                                    {
+                                    	lblCount.Text = "MUTE";
+                                    	commandReceived = true;
+                                    	//SendKeys.SendWait("{DOWN}");
+                                    }
+                                }
+                            }
+                            
+                            // Start pulse
+                            if (bitType == IrBitType.IR_START_BIT)
+                            {
+                                //Debug.WriteLine($"Start: {i}");
+                                receiving = true;
+                                data = 0;
+                                databits = 0;
+                            }
+                        }
+                        pulseHigh = true;
+                        length = 0;
+                    }
+                    else
+                    {
+                        length++;
+                    }
+                }
+                else
+                {
+                    if (pulseHigh)
+                    {
+                        pulseHigh = false;
+                    }
+                    if (length > 0)
+                    {
+                        length++;
+                    }                    
+                }
+            }            
+			
+            return commandReceived;
+		}*/
+		
+		bool AnalyzeReceivedIrData_Backup()
+		{
+            //var dcLevel = points.Average() / 65535.0 * 3.3;
+            var pulseHigh = false;
+            int pulses = 0;
+            var length = 0;
+            var pulseLengths = new List<int>();
+            var receiving = false;
+            long data = 0;
+            bool commandReceived = false;
+            
+            //points = Statistics.MovingAverage(points, 3).ToList();
+			var points = list.Select(pointPair => pointPair.Y).ToList();
+			var scaler = 0.5;
+            for (var i = 0; i < points.Count; i++)
+            {
+            	if (points[i] > 0.8)
+                {               	
+                    // Rising edge starts new pulse
+                    if (!pulseHigh)
+                    {
+                        // Handle current pulse
+                        if (length > 0)
+                        {
+                            var len = length;
+                            pulseLengths.Add(len);
+                            //Debug.WriteLine("Pulse: " + len);
+
+                            if (receiving)
+                            {
+                            	if (len >= (40 * scaler) && len < (48 * scaler))
+                                {
+                                	try
+                                	{
+                                		data |= (long)1 << pulses;
+                                	}
+                                	catch (Exception e) {
+                                		Debug.WriteLine(e.Message);
+                                	}
+                                    
+                                }
+                            	else if (len < (25 * scaler))
+                                {
+                                    // Zero
+                                }
+                                else
+                                {
+                                    //Log.Files.Debug($"Idle: {len}");
+                                    //Log.Files.Debug($"Index: {i}");
+                                    receiving = false;
+                                }
+
+								pulses++;
+                                if (pulses == 32)
+                                {
+                                    receiving = false;
+                                    Debug.WriteLine("Data: 0x" + data.ToString("X2"));
+                                    if ((data & 0xFFFFFFFF) == IR_TV_VOL_UP)
+                                    {
+                                    	lblCount.Text = "UP"; 
+                                    	commandReceived = true;
+                                    }
+                                    else if ((data & 0xFFFFFFFF) == IR_TV_VOL_DOWN)
+                                    {
+                                    	lblCount.Text = "DOWN";
+                                    	commandReceived = true;
+                                    }
+                                }
+                            }
+
+                            // Start pulse
+                            if (len >= (178 * scaler) && len < (182 * scaler))
+                            {
+                                //Debug.WriteLine($"Start: {i}");
+                                receiving = true;
+                                data = 0;
+                                pulses = 0;
+                            }
+                        }
+                        pulseHigh = true;
+                        length = 0;
+                    }
+                    else
+                    {
+                        length++;
+                    }
+                }
+                else
+                {
+                    if (pulseHigh)
+                    {
+                        pulseHigh = false;
+                    }
+                    if (length > 0)
+                    {
+                        length++;
+                    }                    
+                }
+            }
+	
+            return commandReceived;
+		}
+		
 		void AnalyzeReceivedData()
 		{	
 			//lblCount.Text = "";
@@ -166,37 +448,38 @@ namespace DataLogger
 			zg1.Refresh();			
 		}		
 	}
-   class SimpleRunningAverage
-   {
-      int _size;
-      double[] _values = null;
-      int _valuesIndex = 0;
-      int _valueCount = 0;
-      double _sum = 0;
-
-      public SimpleRunningAverage(int size)
-      {
-         System.Diagnostics.Debug.Assert(size > 0);
-         _size = Math.Max(size, 1);
-         _values = new double[_size];
-      }
-
-      public double Add(double newValue)
-      {
-         // calculate new value to add to sum by subtracting the
-         // value that is replaced from the new value;
-         double temp = newValue - _values[_valuesIndex];
-         _values[_valuesIndex] = newValue;
-         _sum += temp;
-
-         _valuesIndex++;
-         _valuesIndex %= _size;
-        
-         if (_valueCount < _size)
-            _valueCount++;
-
-         return _sum / _valueCount;
-      }      
-   } 	
+	
+	class SimpleRunningAverage
+	{
+	  int _size;
+	  double[] _values = null;
+	  int _valuesIndex = 0;
+	  int _valueCount = 0;
+	  double _sum = 0;
+	
+	  public SimpleRunningAverage(int size)
+	  {
+	     System.Diagnostics.Debug.Assert(size > 0);
+	     _size = Math.Max(size, 1);
+	     _values = new double[_size];
+	  }
+	
+	  public double Add(double newValue)
+	  {
+	     // calculate new value to add to sum by subtracting the
+	     // value that is replaced from the new value;
+	     double temp = newValue - _values[_valuesIndex];
+	     _values[_valuesIndex] = newValue;
+	     _sum += temp;
+	
+	     _valuesIndex++;
+	     _valuesIndex %= _size;
+	    
+	     if (_valueCount < _size)
+	        _valueCount++;
+	
+	     return _sum / _valueCount;
+	  }      
+	} 	
 }
 

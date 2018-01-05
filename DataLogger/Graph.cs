@@ -22,7 +22,7 @@ namespace DataLogger
 
 			// Set the titles and axis labels
 			myPane.Title.Text = "ADC result";
-			myPane.XAxis.Title.Text = "Time [ms]";
+			myPane.XAxis.Title.Text = "Samples";
 			myPane.YAxis.Title.Text = "Amplitude [V]";
 
 			// Make up some data points from the Sine function
@@ -56,16 +56,19 @@ namespace DataLogger
 			zg1.AxisChange();
 		}
 		
-		public void UpdataGraph()
+		public void UpdateGraph()
 		{			
 			myPane.CurveList.Clear();
 			
-			myCurve = myPane.AddCurve( "p20(in)", list, Color.Blue, SymbolType.Diamond );
+			myCurve = myPane.AddCurve( "ADC (in)", list, Color.Blue, SymbolType.Diamond );			
+			//myAnalCurve = myPane.AddCurve( "filtered", list2, Color.Red, SymbolType.Circle);	
+			//myDropCurve = myPane.AddCurve( "drops", list3, Color.Black, SymbolType.Star);	
+			
 		    myPane.YAxis.Scale.Min = (double) numericUpDownYMin.Value;
 		    myPane.YAxis.Scale.Max = (double) numericUpDownYMax.Value;
 		    myPane.YAxis.Scale.MaxAuto = false;
-        	zg1.RestoreScale(myPane);
-        	zg1.ZoomOut(myPane);
+        	//zg1.RestoreScale(myPane);
+        	//zg1.ZoomOut(myPane);
 			zg1.AxisChange();
 			zg1.Refresh();
 		}

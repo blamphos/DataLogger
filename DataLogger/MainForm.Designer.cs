@@ -107,7 +107,7 @@ namespace DataLogger
 			// tbData
 			// 
 			this.tbData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left)));
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.tbData.Location = new System.Drawing.Point(12, 43);
 			this.tbData.Multiline = true;
 			this.tbData.Name = "tbData";
@@ -150,19 +150,19 @@ namespace DataLogger
 			// zg1
 			// 
 			this.zg1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.zg1.EditButtons = System.Windows.Forms.MouseButtons.Left;
 			this.zg1.Location = new System.Drawing.Point(440, 41);
 			this.zg1.Name = "zg1";
 			this.zg1.PanModifierKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.None)));
-			this.zg1.ScrollGrace = 0;
-			this.zg1.ScrollMaxX = 0;
-			this.zg1.ScrollMaxY = 0;
-			this.zg1.ScrollMaxY2 = 0;
-			this.zg1.ScrollMinX = 0;
-			this.zg1.ScrollMinY = 0;
-			this.zg1.ScrollMinY2 = 0;
+			this.zg1.ScrollGrace = 0D;
+			this.zg1.ScrollMaxX = 0D;
+			this.zg1.ScrollMaxY = 0D;
+			this.zg1.ScrollMaxY2 = 0D;
+			this.zg1.ScrollMinX = 0D;
+			this.zg1.ScrollMinY = 0D;
+			this.zg1.ScrollMinY2 = 0D;
 			this.zg1.Size = new System.Drawing.Size(498, 315);
 			this.zg1.TabIndex = 8;
 			// 
@@ -306,18 +306,18 @@ namespace DataLogger
 			// 
 			this.numDecimateFactor.Location = new System.Drawing.Point(776, 12);
 			this.numDecimateFactor.Minimum = new decimal(new int[] {
-									1,
-									0,
-									0,
-									0});
+			1,
+			0,
+			0,
+			0});
 			this.numDecimateFactor.Name = "numDecimateFactor";
 			this.numDecimateFactor.Size = new System.Drawing.Size(81, 20);
 			this.numDecimateFactor.TabIndex = 14;
 			this.numDecimateFactor.Value = new decimal(new int[] {
-									10,
-									0,
-									0,
-									0});
+			10,
+			0,
+			0,
+			0});
 			this.numDecimateFactor.Visible = false;
 			// 
 			// label1
@@ -332,29 +332,29 @@ namespace DataLogger
 			// 
 			this.numericUpDownYMax.DecimalPlaces = 1;
 			this.numericUpDownYMax.Increment = new decimal(new int[] {
-									1,
-									0,
-									0,
-									65536});
+			1,
+			0,
+			0,
+			65536});
 			this.numericUpDownYMax.Location = new System.Drawing.Point(350, 204);
 			this.numericUpDownYMax.Maximum = new decimal(new int[] {
-									33,
-									0,
-									0,
-									65536});
+			5,
+			0,
+			0,
+			0});
 			this.numericUpDownYMax.Minimum = new decimal(new int[] {
-									1,
-									0,
-									0,
-									65536});
+			1,
+			0,
+			0,
+			65536});
 			this.numericUpDownYMax.Name = "numericUpDownYMax";
 			this.numericUpDownYMax.Size = new System.Drawing.Size(74, 20);
 			this.numericUpDownYMax.TabIndex = 17;
 			this.numericUpDownYMax.Value = new decimal(new int[] {
-									1,
-									0,
-									0,
-									0});
+			35,
+			0,
+			0,
+			65536});
 			// 
 			// label2
 			// 
@@ -368,16 +368,16 @@ namespace DataLogger
 			// 
 			this.numericUpDownYMin.DecimalPlaces = 1;
 			this.numericUpDownYMin.Increment = new decimal(new int[] {
-									1,
-									0,
-									0,
-									65536});
+			1,
+			0,
+			0,
+			65536});
 			this.numericUpDownYMin.Location = new System.Drawing.Point(350, 250);
 			this.numericUpDownYMin.Maximum = new decimal(new int[] {
-									32,
-									0,
-									0,
-									65536});
+			32,
+			0,
+			0,
+			65536});
 			this.numericUpDownYMin.Name = "numericUpDownYMin";
 			this.numericUpDownYMin.Size = new System.Drawing.Size(74, 20);
 			this.numericUpDownYMin.TabIndex = 19;
@@ -421,6 +421,7 @@ namespace DataLogger
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownYMin)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+
 		}
 		private System.Windows.Forms.NumericUpDown numericUpDownYMin;
 		private System.Windows.Forms.Label label2;
