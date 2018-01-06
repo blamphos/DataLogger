@@ -40,6 +40,7 @@ namespace DataLogger
 		
 		public enum IrCommandType
 		{
+			IrNoCommand,
 			IrTvVolUp,
 			IrTvVolDown,
 			IrTvVolMute			
@@ -59,7 +60,7 @@ namespace DataLogger
         readonly List<int> pulseLengths = new List<int>();
         bool receiving = false;
         long data = 0;
-        bool commandReceived = false;
+        IrCommandType commandReceived;
         IrBitType bitType;
             
 		public IrDecoder()
@@ -101,13 +102,13 @@ namespace DataLogger
 			pulseLengths.Clear();
 			receiving = false;
 			data = 0;
-			commandReceived = false;
+			commandReceived = IrCommandType.IrNoCommand;
 			bitType = IrBitType.IR_INVALID;
 			
 			Debug.WriteLine("IR detection reset");
 		}
 		
-		public bool AnalyzeData(List<double> points)
+		public IrCommandType AnalyzeData(List<double> points)
 		{
             for (var i = 0; i < points.Count; i++)
             {
@@ -164,20 +165,23 @@ namespace DataLogger
                                     if ((data & 0xFFFFFFFF) == IR_TV_VOL_UP)
                                     {
                                     	//lblCount.Text = "UP"; 
-                                    	commandReceived = true;
+                                    	commandReceived = IrCommandType.IrTvVolUp;
                                     	//SendKeys.SendWait("{UP}");
+                                    	Debug.WriteLine(commandReceived);
                                     }
                                     else if ((data & 0xFFFFFFFF) == IR_TV_VOL_DOWN)
                                     {
                                     	//lblCount.Text = "DOWN";
-                                    	commandReceived = true;
+                                    	commandReceived = IrCommandType.IrTvVolDown;
                                     	//SendKeys.SendWait("{DOWN}");
+                                    	Debug.WriteLine(commandReceived);
                                     }
                                     else if ((data & 0xFFFFFFFF) == IR_TV_VOL_MUTE)
                                     {
                                     	//lblCount.Text = "MUTE";
-                                    	commandReceived = true;
+                                    	commandReceived = IrCommandType.IrTvVolMute;
                                     	//SendKeys.SendWait("{DOWN}");
+                                    	Debug.WriteLine(commandReceived);
                                     }
                                 }
                             }

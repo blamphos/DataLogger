@@ -16,7 +16,6 @@ namespace DataLogger
 		int noCommandCounter = 0;
 		IrDecoder irDecoder = new IrDecoder();
 
-			
 		private void ProcessData(string pDataStr)
 		{
 			int i = 0;
@@ -122,7 +121,7 @@ namespace DataLogger
 						//AnalyzeReceivedData(); // Drop detect
 						//if (!AnalyzeReceivedIrData_Backup())
 						//if (!AnalyzeReceivedIrData())
-						if (irDecoder.AnalyzeData(points))
+						if (irDecoder.AnalyzeData(points) == IrDecoder.IrCommandType.IrNoCommand)
 						{
 							noCommandCounter++;
 						}
