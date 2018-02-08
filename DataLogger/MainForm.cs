@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
@@ -321,23 +322,28 @@ namespace DataLogger
    			saveFileDialog1.Filter = "Result data|*.txt";
    			saveFileDialog1.Title = "Export result data";			
    			saveFileDialog1.FileName = "result_data.txt";			
-			
+
 			// If the file name is not an empty string open it for saving.
 			if(saveFileDialog1.ShowDialog() == DialogResult.OK)
 			{
+   				var mbed_filename = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), "res.txt");
+   							
 				StringBuilder sb = new StringBuilder();
+				StringBuilder sb_mbed = new StringBuilder();
 				sb.Append("Time [ms],Voltage [V]").AppendLine();
 				//string dataStr = "Time [ms],Voltage [V]\r\n";
 				
 				foreach (PointPair p in list)
 				{
 					//dataStr += p.X.ToString() + "," + p.Y.ToString() + "\r\n";
-					sb.AppendFormat("{0},{1}", p.X, p.Y).AppendLine();
+					sb.AppendFormat("{0},{1}", p.X.ToString(CultureInfo.InvariantCulture), p.Y.ToString(CultureInfo.InvariantCulture)).AppendLine();
+					sb_mbed.AppendFormat("{0}", p.Y.ToString(CultureInfo.InvariantCulture)).AppendLine();
 				}
 				
 				try
 				{
 					File.WriteAllText(saveFileDialog1.FileName, sb.ToString());
+					File.WriteAllText(mbed_filename, sb_mbed.ToString());
 					//File.WriteAllText(saveFileDialog1.FileName, dataStr);
 				}
 				catch (Exception ex)
@@ -376,8 +382,15 @@ namespace DataLogger
 				            if (i > 0)
 							{
 				            	s_buf = s.Split(',');
-				            	x = Double.Parse(s_buf[0]);
-				            	y = Double.Parse(s_buf[1]);
+				            	//x = Double.Parse(s_buf[0]);
+				            	x = i;
+				            	var value = s_buf[1];
+				            	if (s_buf.Length > 2)
+				            	{
+				            		value += "." + s_buf[2];
+				            	}
+				            	
+				            	y = Convert.ToDouble(value, CultureInfo.InvariantCulture);
 								list.Add(x, y);
 							}
 							i++;							

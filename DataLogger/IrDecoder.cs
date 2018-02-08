@@ -17,7 +17,7 @@ namespace DataLogger
 	/// </summary>
 	public class IrDecoder
 	{
-		const int IR_SAMPLING_PERIOD_US = 100;
+		public const int IR_SAMPLING_PERIOD_US = 100;
 		
 		// Samsung IR codes (32-bit data)
 		const long IR_TV_VOL_UP = 0xF8070707;
