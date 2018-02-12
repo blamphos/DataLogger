@@ -517,8 +517,17 @@ namespace DataLogger
 			zg1.Invalidate();
 			zg1.Refresh();			
 		}
-      public void dummyAlgos()
-      {
+		
+		void BtnClearGraphClick(object sender, EventArgs e)
+		{
+			myPane.CurveList.Clear();
+			
+			zg1.AxisChange();
+			zg1.Refresh();
+		}
+				
+      	public void dummyAlgos()
+      	{
       	/*
 			sbyte F_gfx_Cls = -51;
 			sbyte[] towrite = new sbyte[4];

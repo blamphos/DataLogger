@@ -65,6 +65,7 @@ namespace DataLogger
 			this.numericUpDownYMax = new System.Windows.Forms.NumericUpDown();
 			this.label2 = new System.Windows.Forms.Label();
 			this.numericUpDownYMin = new System.Windows.Forms.NumericUpDown();
+			this.buttonClearGraph = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numDecimateFactor)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownYMax)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownYMin)).BeginInit();
@@ -163,7 +164,7 @@ namespace DataLogger
 			this.zg1.ScrollMinX = 0D;
 			this.zg1.ScrollMinY = 0D;
 			this.zg1.ScrollMinY2 = 0D;
-			this.zg1.Size = new System.Drawing.Size(498, 315);
+			this.zg1.Size = new System.Drawing.Size(607, 315);
 			this.zg1.TabIndex = 8;
 			// 
 			// btnExportGraph
@@ -191,7 +192,7 @@ namespace DataLogger
 			// btnResetZoom
 			// 
 			this.btnResetZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnResetZoom.Location = new System.Drawing.Point(863, 12);
+			this.btnResetZoom.Location = new System.Drawing.Point(972, 12);
 			this.btnResetZoom.Name = "btnResetZoom";
 			this.btnResetZoom.Size = new System.Drawing.Size(75, 23);
 			this.btnResetZoom.TabIndex = 7;
@@ -382,11 +383,22 @@ namespace DataLogger
 			this.numericUpDownYMin.Size = new System.Drawing.Size(74, 20);
 			this.numericUpDownYMin.TabIndex = 19;
 			// 
+			// buttonClearGraph
+			// 
+			this.buttonClearGraph.Location = new System.Drawing.Point(891, 12);
+			this.buttonClearGraph.Name = "buttonClearGraph";
+			this.buttonClearGraph.Size = new System.Drawing.Size(75, 23);
+			this.buttonClearGraph.TabIndex = 21;
+			this.buttonClearGraph.Text = "Clear";
+			this.buttonClearGraph.UseVisualStyleBackColor = true;
+			this.buttonClearGraph.Click += new System.EventHandler(this.BtnClearGraphClick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(950, 368);
+			this.ClientSize = new System.Drawing.Size(1059, 368);
+			this.Controls.Add(this.buttonClearGraph);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.numericUpDownYMin);
 			this.Controls.Add(this.label1);
@@ -450,6 +462,7 @@ namespace DataLogger
 		private System.Windows.Forms.Button btnConnect;
 		private System.Windows.Forms.ComboBox cbPorts;
 		private System.IO.Ports.SerialPort serialPort1;
-		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Timer timer1;		
+		private System.Windows.Forms.Button buttonClearGraph;
 	}
 }
