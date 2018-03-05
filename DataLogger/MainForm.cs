@@ -337,7 +337,9 @@ namespace DataLogger
 				{
 					//dataStr += p.X.ToString() + "," + p.Y.ToString() + "\r\n";
 					sb.AppendFormat("{0},{1}", p.X.ToString(CultureInfo.InvariantCulture), p.Y.ToString(CultureInfo.InvariantCulture)).AppendLine();
-					sb_mbed.AppendFormat("{0}", p.Y.ToString(CultureInfo.InvariantCulture)).AppendLine();
+					// Convert to value back in "mbed format"
+					var value = p.Y / 3.3 * 100;
+					sb_mbed.AppendFormat("{0}", value.ToString(CultureInfo.InvariantCulture)).AppendLine();
 				}
 				
 				try

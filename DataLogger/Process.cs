@@ -65,7 +65,7 @@ namespace DataLogger
 							{
 								x = i * sampleInterval * 1000.0;
 								//y = Double.Parse(s) / 65535.0 * 3.3;
-								y = Double.Parse(s) / 100.0 * 3.3;
+								y = Double.Parse(s);// / 100.0 * 3.3;
 								list.Add(x, y);
 								i++;							
 							}

@@ -339,7 +339,7 @@ namespace DataLogger
 			65536});
 			this.numericUpDownYMax.Location = new System.Drawing.Point(350, 204);
 			this.numericUpDownYMax.Maximum = new decimal(new int[] {
-			5,
+			10,
 			0,
 			0,
 			0});
